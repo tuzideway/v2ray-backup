@@ -1,0 +1,148 @@
+{
+  "log": {
+    "access": "D:\\daily\\access.log",
+    "error": "D:\\daily\\error.log",
+    "loglevel": "debug"
+  },
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": 2003,
+      "protocol": "http",
+      "settings": {
+        "udp": true
+      },
+      "sniffing": {
+        "enabled": false,
+        "destOverride": [
+          "http",
+          "tls"
+        ],
+        "metadataOnly": false
+      }
+    },
+    {
+      "listen": "0.0.0.0",
+      "port": 2003,
+      "protocol": "http",
+      "settings": {
+        "udp": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vmess",
+      "settings": {
+        "vnext": [
+          {
+            "address": "149.28.57.237",
+            "port": 2004,
+            "users": [
+              {
+                "id": "bbe5f226-1904-4842-8bc5-2433530388ca",
+                "alterId": 0,
+                "security": "auto",
+                "level": 0,
+                "experiments": "AuthenticatedLength"
+              }
+            ]
+          }
+        ]
+      },
+      "tag": "out",
+      "streamSettings": {
+        "network": "kcp",
+        "kcpSettings": {
+          "mtu": 1350,
+          "tti": 20,
+          "uplinkCapacity": 200,
+          "downlinkCapacity": 200,
+          "congestion": true,
+          "readBufferSize": 1,
+          "writeBufferSize": 1,
+          "header": {
+            "type": "none"
+          },
+          "seed": "jack"
+        }
+      }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "direct",
+      "settings": {
+        "domainStrategy": "UseIP",
+        "userLevel": 0
+      }
+    }
+  ],
+  "rooting": {
+    "domainStrategy": "IPOnDemand",
+    "domainMatcher": "mph",
+    "routing": {
+      "domainStrategy": "IPOnDemand",
+      "domainMatcher": "mph",
+      "rules": [
+        {
+          "type": "field",
+          "domainMatcher": "mph",
+          "domains": [
+            "dns.google",
+            "one.one.one.one",
+            "geosite:telegram"
+          ],
+          "outboundTag": "out"
+        },
+        {
+          "type": "field",
+          "domainMatcher": "mph",
+          "outboundTag": "direct",
+          "domains": [
+            "geosite:cn"
+          ]
+        },
+        {
+          "type": "field",
+          "domainMatcher": "mph",
+          "outboundTag": "direct",
+          "ip": [
+            "geoip:cn"
+          ]
+        },
+        {
+          "type": "field",
+          "domainMatcher": "mph",
+          "outboundTag": "direct",
+          "ip": [
+            "geoip:private"
+          ]
+        },
+        {
+          "type": "field",
+          "network": "tcp,udp",
+          "outboundTag": "out"
+        }
+      ]
+    }
+  },
+  "dns": {
+    "queryStrategy": "UseIP",
+    "disableFallback": true,
+    "disableCache": true,
+    "tag": "dns_inbound",
+    "servers": [
+      {
+        "address": "119.29.29.29",
+        "port": 53
+      }
+    ]
+  }
+}

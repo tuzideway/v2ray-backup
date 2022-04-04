@@ -1,0 +1,93 @@
+{
+  "log": {
+    "access": "/root/v2ray/access.log",
+    "error": "/root/v2ray/error.log",
+    "loglevel": "debug"
+  },
+  "inbounds": [
+    {
+      "listen": "0.0.0.0",
+      "port": 2004,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "bbe5f226-1904-4842-8bc5-2433530388ca",
+            "level": 0,
+            "alterId": 0
+          }
+        ],
+        "default": {
+          "level": 0,
+          "alterId": 0
+        },
+        "disableInsecureEncryption": true
+      },
+      "streamSettings": {
+        "network": "kcp",
+        "kcpSettings": {
+          "mtu": 1350,
+          "tti": 20,
+          "uplinkCapacity": 300,
+          "downlinkCapacity": 300,
+          "congestion": true,
+          "readBufferSize": 1,
+          "writeBufferSize": 1,
+          "header": {
+            "type": "none"
+          },
+          "seed": "jack"
+        }
+      }
+    },
+    {
+      "port": 2004,
+      "listen": "127.0.0.1",
+      "protocol": "http",
+      "settings": {
+        "udp": true
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "sendThrough": "0.0.0.0",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4",
+        "userLevel": 0
+      },
+      "tag": "out"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "domainMatcher": "mph",
+    "rules": [
+      {
+        "domainMatcher": "mph",
+        "type": "field",
+        "domains": [
+          "geosite:apple",
+          "geosite:google",
+          "geosite:microsoft",
+          "geosite:twitter",
+          "geosite:telegram"
+        ],
+        "outboundTag": "out"
+      },
+      {
+        "type": "field",
+        "network": "tcp,udp",
+        "outboundTag": "proxyout"
+      }
+    ]
+  },
+  "dns": {
+    "queryStrategy": "UseIPv4",
+    "skipFallback": true,
+    "servers": [
+      "https://1.1.1.1/dns-query"
+    ]
+  }
+}
