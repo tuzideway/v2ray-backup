@@ -44,7 +44,7 @@
         "vnext": [
           {
             "address": "149.28.57.237",
-            "port": 2004,
+            "port": 2222,
             "users": [
               {
                 "id": "bbe5f226-1904-4842-8bc5-2433530388ca",
@@ -81,6 +81,15 @@
       "settings": {
         "domainStrategy": "UseIP",
         "userLevel": 0
+      }
+    },
+    {
+      "tag": "adguard",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "none"
+        }
       }
     }
   ],
@@ -129,6 +138,14 @@
           "type": "field",
           "network": "tcp,udp",
           "outboundTag": "out"
+        },
+        {
+          "type": "field",
+          "domainMatcher": "mph",
+          "domains": [
+            "geosite:category-ads-all"
+          ],
+          "outboundTag": "adguard"
         }
       ]
     }
